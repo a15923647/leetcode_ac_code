@@ -2,7 +2,7 @@
 check area
 */
 typedef size_t point;
-typedef vector<point> line;//vector<(x, y)>
+typedef vector<point> line;
 #define X(p) (points[(p)][0])
 #define Y(p) (points[(p)][1])
 #define to_point(p) (make_pair((p)[0], (p)[1]))
@@ -17,22 +17,21 @@ class Solution {
     int maxPoints(vector<vector<int>>& points) {
       const size_t len = points.size();
       if (len < 3) return len;
-      vector<line> lines;
-      lines.push_back(line({0,1}));
+      vector<line> lines(1, line({0,1}));
       //add new point to current graph(lines)
       for (size_t i = 2; i < len; i++) {
-        unordered_set<size_t> connected;
+        vector<bool> connected(i+1, false);
         for (line& li : lines) {
           if (on_line(li, i, points)) {
             //push point to current line
             li.push_back(i);
             for (point& lp : li) {
-              connected.insert(lp);
+              connected[lp] = true;
             }
           } 
         }
         for (size_t j = 0; j < i; j++) {
-          if (!connected.count(j))
+          if (!connected[j])
             lines.push_back(line({i, j}));
         }
       }
